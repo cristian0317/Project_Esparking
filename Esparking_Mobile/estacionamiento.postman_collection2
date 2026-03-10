@@ -1,0 +1,1166 @@
+{
+	"info": {
+		"_postman_id": "c5525c99-bc86-4918-b680-74c6847ab717",
+		"name": "estacionamiento",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48409303",
+		"_collection_link": "https://joint-operations-operator-76840488-9462318.postman.co/workspace/Cristian-%E2%80%9CCris%E2%80%9D-Ortiz-Rendon's-~85492838-3d07-4f8a-84cc-9141acae0f2b/collection/48409303-c5525c99-bc86-4918-b680-74c6847ab717?action=share&source=collection_link&creator=48409303"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"admin\",\n  \"organization\": \"{{organizationId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"authToken\", jsonData.token);",
+									"console.log(\"Auth Token saved: \" + jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"cris@esparking.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Authenticated User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Entry Management",
+			"item": [
+				{
+					"name": "Get Active Entries",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/entries/active",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"entries",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Completed Entries",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/entries/completed",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"entries",
+								"completed"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check-In Vehicle",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vehiclePlate\": \"ABC-123\",\n  \"parkingId\": \"{{parkingId}}\",\n  \"spotId\": \"{{spotId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/entries/check-in",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"entries",
+								"check-in"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check-Out Vehicle",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/entries/check-out/{{plate}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"entries",
+								"check-out",
+								"{{plate}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Organization Management",
+			"item": [
+				{
+					"name": "Create Organization",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"My Organization\",\n  \"address\": \"123 Main St\",\n  \"phone\": \"555-1234\",\n  \"email\": \"org@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/organizations/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"organizations",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Organization by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/organizations/{{organizationId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"organizations",
+								"{{organizationId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Parking Management",
+			"item": [
+				{
+					"name": "Get All Parkings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/parkings/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"parkings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Nearby Parkings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/parkings/nearby?lat=19.4326&lng=-99.1332&maxDistance=10000000",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"parkings",
+								"nearby"
+							],
+							"query": [
+								{
+									"key": "lat",
+									"value": "19.4326"
+								},
+								{
+									"key": "lng",
+									"value": "-99.1332"
+								},
+								{
+									"key": "maxDistance",
+									"value": "10000000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Parking",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/parkings/my-parking",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"parkings",
+								"my-parking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Parkings for Mobile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/parkings/mobile?lat=19.4326&lng=-99.1332",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"parkings",
+								"mobile"
+							],
+							"query": [
+								{
+									"key": "lat",
+									"value": "19.4326"
+								},
+								{
+									"key": "lng",
+									"value": "-99.1332"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Parking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"ccd\",\n  \"address\": \"C. Independencia 55, Centro, 44100 Guadalajara, Jal.\",\n  \"location\": {\n    \"type\": \"Point\",\n    \"coordinates\": [-103.34212562155113,20.678368171994418]\n  },\n  \"totalSpots\": 50,\n  \"folioPrefix\": \"ccd\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/parkings/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"parkings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Spot for Parking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n      \"spotIdentifier\": \"A10\",\n      \"spotType\": \"carro\",\n      \"status\": \"disponible\"\n   }    "
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/parkings/{{parkingId}}/spots",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"parkings",
+								"{{parkingId}}",
+								"spots"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Spots by Parking",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/parkings/{{parkingId}}/spots",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"parkings",
+								"{{parkingId}}",
+								"spots"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rate Management",
+			"item": [
+				{
+					"name": "Get All Rates",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/rates/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"rates",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Rate",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Hourly Rate\",\n  \"price\": 15.00,\n  \"duration\": \"hour\",\n  \"parking\": \"{{parkingId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/rates/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"rates",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Rate",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"price\": 20.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/rates/{{rateId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"rates",
+								"{{rateId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Rate",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/rates/{{rateId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"rates",
+								"{{rateId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Report Generation",
+			"item": [
+				{
+					"name": "Get Financial Summary",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/reports/financial-summary",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"reports",
+								"financial-summary"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Daily Revenue",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/reports/daily-revenue",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"reports",
+								"daily-revenue"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Advanced Report",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/reports/advanced",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"reports",
+								"advanced"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Spot Management",
+			"item": [
+				{
+					"name": "Update Spot Status (Human User)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"ocupado\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/spots/{{spotId}}/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"spots",
+								"{{spotId}}",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Spot Status (ESP32)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-Key",
+								"value": "{{esp32ApiKey}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"ocupado\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/spots/{{spotId}}/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"spots",
+								"{{spotId}}",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Spot",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/spots/{{spotId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"spots",
+								"{{spotId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Device Management",
+			"item": [
+				{
+					"name": "Create Device",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"ESP32 Lugar 4\",\n  \"parkingSpotId\": \"691866054d4c00aec4b55b4d\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/devices/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"devices",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Devices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/devices/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"devices",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Device",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/devices/{{deviceId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"devices",
+								"{{deviceId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Management",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"New User\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"newpassword123\",\n  \"role\": \"cajero\",\n  \"organization\": \"{{organizationId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated User Name\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vehicle Management",
+			"item": [
+				{
+					"name": "Get All Vehicles",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/vehicles/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"vehicles",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Vehicle",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"plate\": \"XYZ-789\",\n  \"brand\": \"Toyota\",\n  \"model\": \"Corolla\",\n  \"color\": \"Red\",\n  \"user\": \"{{userId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/vehicles/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"vehicles",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Vehicle",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"color\": \"Blue\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"vehicles",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Vehicle",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"vehicles",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTg0ZmE0YzE0MzZhYmZkMTFjN2Y2ZSIsInJvbGUiOiJhZG1pbiIsIm9yZ2FuaXphdGlvbiI6IjY5MTg0ZWIyYzE0MzZhYmZkMTFjN2Y2YyIsImlhdCI6MTc2MzIwNTM3NywiZXhwIjoxNzYzMjkxNzc3fQ.HwVZOYtUz_K0GeTsou3os7IhzlN8NYobf7cvW3gGrHc",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000"
+		},
+		{
+			"key": "authToken",
+			"value": ""
+		},
+		{
+			"key": "organizationId",
+			"value": "YOUR_ORGANIZATION_ID"
+		},
+		{
+			"key": "parkingId",
+			"value": "YOUR_PARKING_ID"
+		},
+		{
+			"key": "spotId",
+			"value": "YOUR_SPOT_ID"
+		},
+		{
+			"key": "rateId",
+			"value": "YOUR_RATE_ID"
+		},
+		{
+			"key": "userId",
+			"value": "YOUR_USER_ID"
+		},
+		{
+			"key": "vehicleId",
+			"value": "YOUR_VEHICLE_ID"
+		},
+		{
+			"key": "plate",
+			"value": "ABC-123"
+		},
+		{
+			"key": "esp32ApiKey",
+			"value": "YOUR_ESP32_API_KEY"
+		},
+		{
+			"key": "deviceId",
+			"value": "YOUR_DEVICE_ID"
+		}
+	]
+}
